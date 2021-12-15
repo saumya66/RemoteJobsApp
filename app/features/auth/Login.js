@@ -2,18 +2,36 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { auth } from '../../firebase'
+import { store } from '../../store'
+import { updateUser } from './authSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+
+  const persistUserData = (user) => {
+    return new Promise(function (resolve, reject) {
+      AsyncStorage.setItem('userData', JSON.stringify(user))
+        .then(() => resolve(JSON.stringify(user)))
+        .catch((err) => reject('Logged in User data not persisted : ', err))
+    })
+  }
   const handleSignUp = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user
-        console.log(user.email)
+        persistUserData(user)
+          .then(
+            (user) => console.log(user)
+            // dispatch(updateUser({ user: user, status: 'loggedIn' }))
+          )
+          .catch((error) => alert(error))
       })
       .catch((err) => {
         alert(err.message)
@@ -24,20 +42,32 @@ const Login = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user
-        console.log(user.email)
+        // console.log('userrr :', user)
+        persistUserData(user)
+          .then((user) => {
+            // console.log('Saved User : ', user)
+            dispatch(updateUser({ user: user, status: 'loggedIn' }))
+          })
+          .catch((error) => alert(error))
       })
       .catch((err) => {
         alert(err.message)
       })
   }
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate('Home')
-      }
-    })
-    return unsubscribe
-  }, [])
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+
+  //     }
+  //   })
+  //   return unsubscribe
+  // }, [])
+  // useEffect(() => {
+  //   if (auth.currentUser.email) {
+  //     console.log(auth.currentUser)
+  //     navigation.navigate('Jobs')
+  //   } else console.log(auth.currentUser)
+  // }, [])
 
   return (
     <KeyboardAvoidingView

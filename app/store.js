@@ -1,8 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { listingReducer } from './features/listings/listingSlice'
-
+import { jobsReducer } from './features/jobs/jobsSlice'
+import { authReducer } from './features/auth/authSlice'
 export const store = configureStore({
   reducer: {
-    listing: listingReducer,
+    jobs: jobsReducer,
+    auth: authReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 })
