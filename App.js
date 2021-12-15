@@ -16,11 +16,6 @@ const Stack = createNativeStackNavigator()
 const App = () => {
   const user = useSelector((state) => state.auth)
 
-  // useEffect(() => {
-  //   if (user) {
-  //     console.log(auth.currentUser)
-  //   }
-  // }, [])
   return (
     <View style={styles.container}>
       <NavigationContainer>

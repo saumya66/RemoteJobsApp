@@ -1,10 +1,7 @@
-import { useNavigation } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import { auth } from '../firebase'
 import { updateUser } from './auth/authSlice'
-import { getUserFromStorage } from '../helper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const SplashScreen = () => {
