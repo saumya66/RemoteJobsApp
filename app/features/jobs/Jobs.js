@@ -1,42 +1,46 @@
-import { useNavigation } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { auth } from '../../firebase'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
 import { updateUser } from '../auth/authSlice'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
-const Listing = () => {
+const Jobs = () => {
   const dispatch = useDispatch()
   const jobs = useSelector((state) => state.jobs)
-  const user = useSelector((state) => state.auth)
-  const navigation = useNavigation()
-
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(async () => {
-        await AsyncStorage.removeItem('userData')
-        dispatch(updateUser({ user: null, status: 'loggedOut' }))
-      })
-      .catch((err) => alert(err))
-  }
   useEffect(() => {
     dispatch(fetchListings())
   }, [])
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Email : {JSON.parse(user.user).email}</Text>
-      <TouchableOpacity onPress={handleSignOut} style={styles.button}>
-        <Text style={styles.buttonText}>Signout</Text>
-      </TouchableOpacity>
+    <View style={styles.jobsCont}>
+      {console.log('Yo', jobs?.jobs)}
+      <View style={styles.headerCont}>
+        <Icon name="bars" size={30} color="black" />
+        <Icon name="user-circle" size={30} color="black" />
+      </View>
+      <Text style={{ fontFamily: 'graphik-regular', fontSize: 30 }}>
+        Remote Jobs 👇
+      </Text>
     </View>
   )
 }
-export default Listing
+export default Jobs
 
 const styles = StyleSheet.create({
+  jobsCont: {
+    flex: 1,
+    paddingLeft: 8,
+    paddingRight: 8,
+    backgroundColor: 'white',
+  },
+  headerCont: {
+    height: '8%',
+    alignItems: 'center',
+    // backgroundColor: 'grey',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   button: {
     width: '70%',
     backgroundColor: '#1A73E8',

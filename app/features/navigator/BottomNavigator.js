@@ -1,16 +1,32 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Listing from '../listings/Listings'
+import Jobs from '../jobs/Jobs'
+import Home from '../Home/Home'
+import * as React from 'react'
+import Profile from '../profile/Profile'
 
 const Tab = createBottomTabNavigator()
 
-const Tab = () => {
+const Tabs = () => {
   return (
-    <Tab.Navigator initialRouteName="">
+    <Tab.Navigator initialRouteName="Jobs">
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+          // tabBarBadge: 3, //Shows notifications
+        }}
+      />
       <Tab.Screen
         name="Jobs"
-        component={Listing}
+        component={Jobs}
         options={{
+          headerShown: false,
           tabBarLabel: 'Jobs',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
@@ -22,16 +38,19 @@ const Tab = () => {
         }}
       />
       <Tab.Screen
-        name="Home"
-        component={Notifications}
+        name="Profile"
+        component={Profile}
         options={{
-          tabBarLabel: 'Updates',
+          headerShown: false,
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+            <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
-          tabBarBadge: 3,
+          // tabBarBadge: 3, //Shows notifications
         }}
       />
     </Tab.Navigator>
   )
 }
+
+export default Tabs

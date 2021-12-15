@@ -54,20 +54,6 @@ const Login = () => {
         alert(err.message)
       })
   }
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-
-  //     }
-  //   })
-  //   return unsubscribe
-  // }, [])
-  // useEffect(() => {
-  //   if (auth.currentUser.email) {
-  //     console.log(auth.currentUser)
-  //     navigation.navigate('Jobs')
-  //   } else console.log(auth.currentUser)
-  // }, [])
 
   return (
     <KeyboardAvoidingView

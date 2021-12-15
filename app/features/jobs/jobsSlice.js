@@ -8,6 +8,8 @@ export const fetchListings = createAsyncThunk(
     const listing = await axios
       .get('https://remoteok.io/api')
       .then((res) => res.data)
+    listing.shift()
+    listing.shift()
     return listing
   }
 )

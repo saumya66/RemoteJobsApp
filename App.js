@@ -1,33 +1,43 @@
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { store } from './app/store'
 import {} from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Jobs from './app/features/jobs/Jobs'
 import Login from './app/features/auth/Login'
-import Home from './app/features/Home/Home'
-import { auth } from './app/firebase'
 import SplashScreen from './app/features/SplashScreen'
-const Stack = createNativeStackNavigator()
+import Tabs from './app/features/navigator/BottomNavigator'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
 
+const Stack = createNativeStackNavigator()
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'graphik-regular': require('./assets/fonts/GraphikRegular.ttf'),
+  })
+}
 const App = () => {
   const user = useSelector((state) => state.auth)
 
   return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <NavigationContainer>
           {user.status === 'loading' ? (
-            <Stack.Screen
-              options={{ headerShown: false }}
-              name="Splash"
-              component={SplashScreen}
-            />
+            <Stack.Navigator>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Splash"
+                component={SplashScreen}
+              />
+            </Stack.Navigator>
           ) : user.status === 'loggedIn' ? (
             <>
+              <Tabs />
+              {/* <Stack.Navigator>
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="Jobs"
@@ -38,21 +48,34 @@ const App = () => {
                 name="Home"
                 component={Home}
               />
+            </Stack.Navigator> */}
             </>
           ) : (
-            <Stack.Screen
-              options={{ headerShown: false }}
-              name="Login"
-              component={Login}
-            />
+            <Stack.Navigator>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Login"
+                component={Login}
+              />
+            </Stack.Navigator>
           )}
-        </Stack.Navigator>
-      </NavigationContainer>
-      <StatusBar style="auto" />
-    </View>
+        </NavigationContainer>
+        <StatusBar style="auto" />
+      </View>
+    </SafeAreaView>
   )
 }
 export default function AppWrapper() {
+  const [dataLoaded, setDataLoaded] = useState(false)
+  if (!dataLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setDataLoaded(true)}
+        onError={console.warn}
+      />
+    )
+  }
   return (
     <Provider store={store}>
       <App />
