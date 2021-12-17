@@ -2,10 +2,12 @@ import React, { useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { auth } from '../../firebase'
 import { useSelector, useDispatch } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { updateUser } from '../auth/authSlice'
 
 const Profile = () => {
   const user = useSelector((state) => state.auth)
-
+  const dispatch = useDispatch()
   const handleSignOut = () => {
     auth
       .signOut()

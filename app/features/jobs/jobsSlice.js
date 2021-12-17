@@ -8,13 +8,13 @@ export const fetchListings = createAsyncThunk(
     const listing = await axios
       .get('https://remoteok.io/api')
       .then((res) => res.data)
-    listing.shift()
-    listing.shift()
-    return listing
+    // listing.shift() //Removes first object in array
+    // listing.shift()
+    return listing.slice(1)
   }
 )
 const initialState = {
-  loading: false,
+  loading: true,
   jobs: [],
 }
 

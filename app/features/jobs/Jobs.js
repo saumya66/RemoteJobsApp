@@ -1,10 +1,33 @@
 import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
 import { updateUser } from '../auth/authSlice'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import AntDesign from 'react-native-vector-icons/AntDesign'
+
+const JobCard = ({ item }) => {
+  console.log(item?.company)
+  return (
+    <View
+      style={{
+        // shadowColor: 'black',
+        // elevation: 4,
+        // shadowRadius: 20,
+        // shadowOpacity: 0.3,
+        height: 100,
+        marginBottom: 8,
+        width: '100%',
+        flexDirection: 'row',
+        border: '1px solid black',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 8,
+      }}
+    >
+      {/* <Text>{item.company}</Text> */}
+    </View>
+  )
+}
 
 const Jobs = () => {
   const dispatch = useDispatch()
@@ -14,7 +37,7 @@ const Jobs = () => {
   }, [])
   return (
     <View style={styles.jobsCont}>
-      {console.log('Yo', jobs?.jobs)}
+      {/* {!jobs.loading && console.log('Yo', jobs?.jobs)} */}
       <View style={styles.headerCont}>
         <Icon name="bars" size={30} color="black" />
         <Icon name="user-circle" size={30} color="black" />
@@ -22,6 +45,13 @@ const Jobs = () => {
       <Text style={{ fontFamily: 'graphik-regular', fontSize: 30 }}>
         Remote Jobs 👇
       </Text>
+      <View style={styles.listCont}>
+        <FlatList
+          data={!jobs.loading && jobs?.jobs}
+          renderItem={JobCard}
+          keyExtractor={(item) => item?.id}
+        />
+      </View>
     </View>
   )
 }
@@ -32,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 8,
     paddingRight: 8,
-    backgroundColor: 'white',
+    backgroundColor: '#FAFAFC',
   },
   headerCont: {
     height: '8%',
@@ -54,5 +84,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  listCont: {
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
+    // height: '100%',
+    position: 'relative',
   },
 })
