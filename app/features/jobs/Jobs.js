@@ -1,12 +1,21 @@
 import React, { useEffect } from 'react'
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+} from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
 import { updateUser } from '../auth/authSlice'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+import Icon1 from 'react-native-vector-icons/Ionicons'
+import { getPeriod } from '../../helper'
 const JobCard = ({ item }) => {
-  console.log(item?.company)
+  // console.log(item?.company)
+  // console.log()
   return (
     <View
       style={{
@@ -14,7 +23,7 @@ const JobCard = ({ item }) => {
         // elevation: 4,
         // shadowRadius: 20,
         // shadowOpacity: 0.3,
-        height: 100,
+        height: 'auto',
         marginBottom: 8,
         width: '100%',
         flexDirection: 'row',
@@ -24,7 +33,79 @@ const JobCard = ({ item }) => {
         padding: 8,
       }}
     >
-      {/* <Text>{item.company}</Text> */}
+      <View
+        style={{
+          ...styles.logoCont,
+          width: '25%',
+          padding: 8,
+          // alignItems: 'center',
+          // justifyContent: 'center',
+        }}
+      >
+        {item?.company_logo ? (
+          <Image
+            style={{
+              flex: 1,
+              width: undefined,
+              height: undefined,
+              borderRadius: 10,
+              resizeMode: 'contain',
+            }}
+            source={{
+              uri: item?.company_logo,
+            }}
+          />
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icon name="building" size={30} color="#8D889D"></Icon>
+          </View>
+        )}
+      </View>
+      <View
+        style={{
+          ...styles.jobInfo,
+          width: '60%',
+          // backgroundColor: 'grey',
+          paddingTop: 8,
+          paddingHorizontal: 8,
+          paddingBottom: 8,
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ marginBottom: 8 }}>
+          <Text style={{ opacity: 0.5 }}>{item?.company}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+            {item?.position}
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          {item?.location ? (
+            <Icon1 name="location-outline" size={20} color={'#8D889D'}></Icon1>
+          ) : null}
+          <Text style={{ color: '#8D889D' }}>{item?.location}</Text>
+        </View>
+      </View>
+      <View
+        style={{
+          width: '15%',
+          padding: 8,
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text style={{ color: '#8D889D' }}>
+          {getPeriod(Date.parse(item?.date))}
+        </Text>
+        <TouchableOpacity>
+          <Icon name={'bookmark-o'} size={20} color={'#8D889D'}></Icon>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
@@ -37,14 +118,13 @@ const Jobs = () => {
   }, [])
   return (
     <View style={styles.jobsCont}>
-      {/* {!jobs.loading && console.log('Yo', jobs?.jobs)} */}
       <View style={styles.headerCont}>
         <Icon name="bars" size={30} color="black" />
         <Icon name="user-circle" size={30} color="black" />
       </View>
-      <Text style={{ fontFamily: 'graphik-regular', fontSize: 30 }}>
+      {/* <Text style={{ fontFamily: 'graphik-regular', fontSize: 30 }}>
         Remote Jobs 👇
-      </Text>
+      </Text> */}
       <View style={styles.listCont}>
         <FlatList
           data={!jobs.loading && jobs?.jobs}
@@ -92,4 +172,5 @@ const styles = StyleSheet.create({
     // height: '100%',
     position: 'relative',
   },
+  logoCont: {},
 })
