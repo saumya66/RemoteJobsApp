@@ -6,7 +6,6 @@ import {
   FlatList,
   StyleSheet,
   Image,
-  Button,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
@@ -16,7 +15,14 @@ import { getPeriod } from '../../helper'
 
 function JobCard({ item }, navigation) {
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('JobDetails')}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('JobDetails', {
+          //passing props to the navigating screen in props.route.params
+          job: item,
+        })
+      }
+    >
       <View
         style={{
           // shadowColor: 'black',
@@ -44,8 +50,8 @@ function JobCard({ item }, navigation) {
             <Image
               style={{
                 flex: 1,
-                width: undefined,
-                height: undefined,
+                // width: undefined,
+                // height: undefined,
                 borderRadius: 10,
                 resizeMode: 'contain',
               }}
@@ -82,16 +88,16 @@ function JobCard({ item }, navigation) {
               {item?.position}
             </Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            {item?.location ? (
+          {item?.location ? (
+            <View style={{ flexDirection: 'row' }}>
               <Icon1
                 name="location-outline"
                 size={20}
                 color={'#8D889D'}
               ></Icon1>
-            ) : null}
-            <Text style={{ color: '#8D889D' }}>{item?.location}</Text>
-          </View>
+              <Text style={{ color: '#8D889D' }}>{item?.location}</Text>
+            </View>
+          ) : null}
         </View>
         <View
           style={{
