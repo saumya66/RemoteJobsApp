@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { auth } from '../../firebase'
-import { store } from '../../store'
+import { auth, db } from '../../firebase'
 import { updateUser } from './authSlice'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -21,15 +20,30 @@ const Login = () => {
         .catch((err) => reject('Logged in User data not persisted : ', err))
     })
   }
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+    // const userData = {}
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user
+        db.collection('users').doc(user.uid).set({
+          email: user.email,
+          name: '',
+          savedJobs: [],
+        })
         persistUserData(user)
-          .then(
-            (user) => console.log(user)
-            // dispatch(updateUser({ user: user, status: 'loggedIn' }))
+          .then((user) =>
+            dispatch(
+              updateUser({
+                user: user,
+                userData: {
+                  email: user.email,
+                  name: '',
+                  savedJobs: [],
+                },
+                status: 'loggedIn',
+              })
+            )
           )
           .catch((error) => alert(error))
       })
@@ -37,16 +51,29 @@ const Login = () => {
         alert(err.message)
       })
   }
+
   const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
+      .then(async (userCredentials) => {
         const user = userCredentials.user
         // console.log('userrr :', user)
+        const userData = await db
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((docSnapshot) => {
+            if (docSnapshot.exists) {
+              return docSnapshot.data()
+            } else console.log('Nope')
+          })
+
         persistUserData(user)
           .then((user) => {
             // console.log('Saved User : ', user)
-            dispatch(updateUser({ user: user, status: 'loggedIn' }))
+            dispatch(
+              updateUser({ user: user, userData: userData, status: 'loggedIn' })
+            )
           })
           .catch((error) => alert(error))
       })
