@@ -22,7 +22,7 @@ const Tabs = () => {
       //   ></BottomTabBar>
       // )}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Home"
         component={Home}
         options={{
@@ -33,7 +33,7 @@ const Tabs = () => {
           ),
           // tabBarBadge: 3, //Shows notifications
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Jobs"
         component={Jobs}

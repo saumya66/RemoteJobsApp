@@ -1,34 +1,86 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   TouchableOpacity,
   View,
   Text,
   FlatList,
+  TextInput,
   StyleSheet,
   Image,
+  Keyboard,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import JobCard from '../../components/JobCard'
-
+import _ from 'lodash'
 const Jobs = ({ navigation }) => {
   const dispatch = useDispatch()
   const jobs = useSelector((state) => state.jobs)
+  const [searchActive, setSearchActive] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     dispatch(fetchListings())
   }, [])
+
   return (
     <View style={styles.jobsCont}>
       {/* <View style={styles.headerCont}>
         <Icon name="bars" size={30} color="black" />
         <Icon name="user-circle" size={30} color="black" />
       </View> */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 10,
+          width: '100%',
+          alignItems: 'center',
+        }}
+      >
+        <View
+          style={{
+            width: searchActive ? '85%' : '96%',
+            flexDirection: 'row',
+            borderWidth: 0.5,
+            borderColor: '#8D889D',
+            alignItems: 'center',
+            paddingHorizontal: 8,
 
+            borderRadius: 15,
+            height: 45,
+          }}
+        >
+          <Icon name="briefcase-search" size={30} color="#8D889D" />
+          <TextInput
+            style={{ marginLeft: 8 }}
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
+            onFocus={() => setSearchActive(true)}
+            placeholder="Search Jobs"
+          ></TextInput>
+        </View>
+        {searchActive && (
+          <Text
+            style={{}}
+            onPress={() => {
+              Keyboard.dismiss()
+              setSearchActive(false)('')
+            }}
+          >
+            Cancel
+          </Text>
+        )}
+      </View>
       <View style={styles.listCont}>
         <FlatList
-          data={!jobs.loading && jobs?.jobs}
+          data={
+            !jobs.loading &&
+            jobs?.jobs.filter((job) =>
+              job.position.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+          }
           renderItem={({ item }) => (
             <JobCard item={item} navigation={navigation} />
           )}
@@ -45,6 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 8,
     paddingRight: 8,
+    // alignItems: 'center',
     backgroundColor: '#FAFAFC',
   },
   headerCont: {
