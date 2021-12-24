@@ -13,27 +13,18 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import JobCard from '../../components/JobCard'
 
 const Jobs = ({ navigation }) => {
-  // const navigation = useNavigation()
   const dispatch = useDispatch()
   const jobs = useSelector((state) => state.jobs)
-  // const user = useSelector((state) => state.auth.user)
-  // console.log(user)
+
   useEffect(() => {
     dispatch(fetchListings())
   }, [])
   return (
     <View style={styles.jobsCont}>
-      <View style={styles.headerCont}>
+      {/* <View style={styles.headerCont}>
         <Icon name="bars" size={30} color="black" />
         <Icon name="user-circle" size={30} color="black" />
-      </View>
-
-      {/* <Text
-        onPress={(e) => navigation.navigate('JobDetails')}
-        style={{ fontFamily: 'graphik-regular', fontSize: 30 }}
-      >
-        Remote Jobs 👇
-      </Text> */}
+      </View> */}
 
       <View style={styles.listCont}>
         <FlatList

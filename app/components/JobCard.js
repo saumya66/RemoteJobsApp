@@ -1,13 +1,6 @@
 import * as React from 'react'
 
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Image,
-} from 'react-native'
+import { TouchableOpacity, View, Text, Image } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon1 from 'react-native-vector-icons/Ionicons'
@@ -25,7 +18,6 @@ const JobCard = ({ item, navigation }) => {
       .update({ savedJobs: newSavedJobs })
       .then(() => console.log('Update Success'))
       .catch((err) => console.log(err))
-    // console.log(newSavedJobs)
   }
 
   return (
