@@ -7,7 +7,7 @@ import { updateUser } from '../auth/authSlice'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Icon1 from 'react-native-vector-icons/AntDesign'
 
-const MenuItem = ({ handlePress }) => {
+const MenuItem = ({ handlePress, name, iconName }) => {
   return (
     <TouchableOpacity onPress={(e) => handlePress(e)}>
       <View
@@ -19,8 +19,8 @@ const MenuItem = ({ handlePress }) => {
           // backgroundColor: 'grey',
         }}
       >
-        <Icon1 name="logout" size={30} />
-        <Text style={{ marginLeft: 30 }}>Logout</Text>
+        <Icon1 name={iconName} size={30} />
+        <Text style={{ marginLeft: 30 }}>{name}</Text>
       </View>
     </TouchableOpacity>
   )
@@ -96,14 +96,18 @@ const Profile = () => {
       <View
         style={{
           // paddingTop: 8,
-          width: '90%',
+          width: '95%',
           marginTop: 12,
           backgroundColor: 'white',
           height: 'auto',
           paddingHorizontal: 12,
         }}
       >
-        <MenuItem handlePress={handleSignOut} />
+        <MenuItem
+          handlePress={handleSignOut}
+          name={'Logout'}
+          iconName={'logout'}
+        />
       </View>
     </View>
   )

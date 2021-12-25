@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon1 from 'react-native-vector-icons/Ionicons'
 import { getPeriod } from '../helper'
 import { db } from '../firebase'
+import { updateUser } from '../features/auth/authSlice'
 
 const JobCard = ({ item, navigation }) => {
   const user = useSelector((state) => state.auth)
@@ -16,7 +17,14 @@ const JobCard = ({ item, navigation }) => {
     db.collection('users')
       .doc(JSON.parse(user.user).uid)
       .update({ savedJobs: newSavedJobs })
-      .then(() => console.log('Update Success'))
+      .then(() => {
+        // console.log({ ...user.userData, savedJobs: newSavedJobs })
+        updateUser({
+          user: user.user,
+          userData: { ...user.userData, savedJobs: newSavedJobs },
+          status: 'loggedIn',
+        })
+      })
       .catch((err) => console.log(err))
   }
 
