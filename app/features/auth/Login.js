@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Login = () => {
   const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -28,7 +29,7 @@ const Login = () => {
         const user = userCredentials.user
         db.collection('users').doc(user.uid).set({
           email: user.email,
-          name: '',
+          name: name,
           savedJobs: [],
         })
         persistUserData(user)
@@ -38,7 +39,7 @@ const Login = () => {
                 user: user,
                 userData: {
                   email: user.email,
-                  name: '',
+                  name: name,
                   savedJobs: [],
                 },
                 status: 'loggedIn',
@@ -81,13 +82,18 @@ const Login = () => {
         alert(err.message)
       })
   }
-
   return (
     <KeyboardAvoidingView
       //   behavior="padding"
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
     >
       <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Name"
+          value={name}
+          onChangeText={(text) => setName(text)}
+          style={styles.input}
+        />
         <TextInput
           placeholder="Email"
           value={email}
