@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import {
   Image,
-  Pressable,
   StyleSheet,
+  Pressable,
   Text,
   TouchableOpacity,
   View,
@@ -13,8 +13,9 @@ import { auth, db } from '../../firebase'
 import { updateUser } from './authSlice'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
   const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
 
@@ -25,37 +26,37 @@ const Login = ({ navigation }) => {
         .catch((err) => reject('Logged in User data not persisted : ', err))
     })
   }
-
-  const handleLogin = () => {
+  const handleSignUp = async () => {
     auth
-      .signInWithEmailAndPassword(email, password)
-      .then(async (userCredentials) => {
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
         const user = userCredentials.user
-        // console.log('userrr :', user)
-        const userData = await db
-          .collection('users')
-          .doc(user.uid)
-          .get()
-          .then((docSnapshot) => {
-            if (docSnapshot.exists) {
-              return docSnapshot.data()
-            } else console.log('Nope')
-          })
-        //Saving user data in storage
+        db.collection('users').doc(user.uid).set({
+          email: user.email,
+          name: name,
+          savedJobs: [],
+        })
         persistUserData(user)
-          .then((user) => {
-            // console.log('Saved User : ', user)
-            //Updating Redux State
+          .then((user) =>
             dispatch(
-              updateUser({ user: user, userData: userData, status: 'loggedIn' })
+              updateUser({
+                user: user,
+                userData: {
+                  email: user.email,
+                  name: name,
+                  savedJobs: [],
+                },
+                status: 'loggedIn',
+              })
             )
-          })
-          .catch((error) => alert("Couldn't save user data : ", error))
+          )
+          .catch((error) => alert(error))
       })
       .catch((err) => {
-        alert('Could not Sign In.. : ', err.message)
+        alert(err.message)
       })
   }
+
   return (
     <KeyboardAvoidingView
       //   behavior="padding"
@@ -68,7 +69,7 @@ const Login = ({ navigation }) => {
     >
       <View
         style={{
-          height: '55%',
+          height: '50%',
           alignItems: 'center',
           justifyContent: 'flex-end',
         }}
@@ -91,8 +92,14 @@ const Login = ({ navigation }) => {
             marginBottom: 20,
           }}
         >
-          Sign In
+          Sign Up
         </Text>
+        <TextInput
+          placeholder="Name"
+          value={name}
+          onChangeText={(text) => setName(text)}
+          style={styles.input}
+        />
         <TextInput
           placeholder="Email"
           value={email}
@@ -107,7 +114,7 @@ const Login = ({ navigation }) => {
           secureTextEntry
         />
         <Pressable
-          onPress={handleLogin}
+          onPress={handleSignUp}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? 'rgba(255,255,255, 0.2)' : '#0164FC',
@@ -117,7 +124,7 @@ const Login = ({ navigation }) => {
         >
           {/* style={styles.button2}> */}
           <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white' }}>
-            Login
+            Sign Up
           </Text>
         </Pressable>
         <View
@@ -128,10 +135,10 @@ const Login = ({ navigation }) => {
           }}
         >
           <Text style={{ fontSize: 15, color: 'white' }}>
-            {'New to RemoteHub ? '}
+            {'Already have an account ? '}
           </Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Signup')}
+            onPress={() => navigation.navigate('Login')}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -144,28 +151,23 @@ const Login = ({ navigation }) => {
                 color: 'white',
               }}
             >
-              Sign Up
+              Login
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-      {/* <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogin} style={[styles.button]}>
-          <Text style={[styles.buttonText]}>Login</Text>
-        </TouchableOpacity>
-      </View> */}
     </KeyboardAvoidingView>
   )
 }
 
-export default Login
+export default Signup
 
 const styles = StyleSheet.create({
   input: {
     backgroundColor: 'white',
     paddingHorizontal: 15,
     marginBottom: 10,
-    borderRadius: 15,
+    borderRadius: 8,
     height: 45,
   },
   inputContainer: {

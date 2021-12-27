@@ -77,6 +77,7 @@ const Welcome = ({ navigation }) => {
         </Pressable>
 
         <Pressable
+          onPress={() => navigation.navigate('Signup')}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? 'rgba(255,255,255, 0.2)' : '#0164FC',
