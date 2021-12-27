@@ -12,6 +12,7 @@ import Tabs from './app/features/navigator/BottomNavigator'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
+import Welcome from './app/features/auth/Welcome'
 
 const Stack = createNativeStackNavigator()
 const fetchFonts = () => {
@@ -52,6 +53,11 @@ const App = () => {
             </>
           ) : (
             <Stack.Navigator>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Welcome"
+                component={Welcome}
+              ></Stack.Screen>
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="Login"

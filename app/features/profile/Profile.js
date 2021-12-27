@@ -16,7 +16,6 @@ const MenuItem = ({ handlePress, name, iconName }) => {
           flexDirection: 'row',
           height: 60,
           alignItems: 'center',
-          // backgroundColor: 'grey',
         }}
       >
         <Icon1 name={iconName} size={30} />

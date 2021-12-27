@@ -18,7 +18,6 @@ const JobCard = ({ item, navigation }) => {
       .doc(JSON.parse(user.user).uid)
       .update({ savedJobs: newSavedJobs })
       .then(() => {
-        // console.log({ ...user.userData, savedJobs: newSavedJobs })
         updateUser({
           user: user.user,
           userData: { ...user.userData, savedJobs: newSavedJobs },
