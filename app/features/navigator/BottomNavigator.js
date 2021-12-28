@@ -6,7 +6,7 @@ import * as React from 'react'
 import Profile from '../profile/Profile'
 import { BottomTabBar } from '@react-navigation/bottom-tabs'
 import JobDetails from '../jobs/jobdetails/JobDetails'
-
+import SavedJobs from '../jobs/SavedJobs'
 const Tab = createBottomTabNavigator()
 
 const Tabs = () => {
@@ -53,7 +53,7 @@ const Tabs = () => {
         name="Profile"
         component={Profile}
         options={{
-          headerShown: false,
+          headerShown: true,
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
@@ -67,6 +67,17 @@ const Tabs = () => {
         options={{
           headerShown: false,
           tabBarLabel: 'JobDetails',
+
+          tabBarButton: () => null, //New approach just adding this and the below prop hides the tab but let's you navigate to it
+          tabBarVisible: false,
+        }}
+      />
+      <Tab.Screen
+        name="Saves"
+        component={SavedJobs}
+        options={{
+          headerShown: true,
+          tabBarLabel: 'SavedJobs',
 
           tabBarButton: () => null, //New approach just adding this and the below prop hides the tab but let's you navigate to it
           tabBarVisible: false,

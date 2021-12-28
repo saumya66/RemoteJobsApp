@@ -25,7 +25,7 @@ const MenuItem = ({ handlePress, name, iconName }) => {
   )
 }
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const user = useSelector((state) => state.auth)
   const dispatch = useDispatch()
   const handleSignOut = (e) => {
@@ -102,6 +102,11 @@ const Profile = () => {
           paddingHorizontal: 12,
         }}
       >
+        <MenuItem
+          handlePress={() => navigation.navigate('Saves')}
+          name={'Saves'}
+          iconName={'save'}
+        />
         <MenuItem
           handlePress={handleSignOut}
           name={'Logout'}

@@ -29,34 +29,35 @@ const JobCard = ({ item, navigation, saved }) => {
   }
 
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('JobDetails', {
-          //passing props to the navigating screen in props.route.params
-          job: item,
-        })
-      }
+    <View
+      style={{
+        // shadowColor: 'black',
+        // elevation: 4,
+        // shadowRadius: 20,
+        // shadowOpacity: 0.3,
+        height: 'auto',
+        marginBottom: 8,
+        width: '100%',
+        flexDirection: 'row',
+        border: '1px solid black',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 8,
+      }}
     >
-      <View
-        style={{
-          // shadowColor: 'black',
-          // elevation: 4,
-          // shadowRadius: 20,
-          // shadowOpacity: 0.3,
-          height: 'auto',
-          marginBottom: 8,
-          width: '100%',
-          flexDirection: 'row',
-          border: '1px solid black',
-          backgroundColor: 'white',
-          borderRadius: 10,
-          padding: 8,
-        }}
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('JobDetails', {
+            //passing props to the navigating screen in props.route.params
+            job: item,
+          })
+        }
+        style={{ width: '85%', flexDirection: 'row' }}
       >
         <View
           style={{
             // ...styles.logoCont,
-            width: '25%',
+            width: '30%',
             padding: 8,
           }}
         >
@@ -88,7 +89,7 @@ const JobCard = ({ item, navigation, saved }) => {
         <View
           style={{
             // ...styles.jobInfo,
-            width: '60%',
+            width: '70%',
             // backgroundColor: 'grey',
             paddingTop: 8,
             paddingHorizontal: 8,
@@ -113,27 +114,30 @@ const JobCard = ({ item, navigation, saved }) => {
             </View>
           ) : null}
         </View>
-        <View
-          style={{
-            width: '15%',
-            padding: 8,
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-          }}
+      </TouchableOpacity>
+      <View
+        style={{
+          width: '15%',
+          padding: 8,
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text style={{ color: '#8D889D' }}>
+          {getPeriod(Date.parse(item?.date))}
+        </Text>
+        <TouchableOpacity
+          disabled={saved ? true : false}
+          onPress={(e) => saveJob()}
         >
-          <Text style={{ color: '#8D889D' }}>
-            {getPeriod(Date.parse(item?.date))}
-          </Text>
-          <TouchableOpacity onPress={(e) => saveJob()}>
-            {saved ? (
-              <Icon name={'bookmark-o'} size={20} color={'#8D889D'}></Icon>
-            ) : (
-              <Icon name={'bookmark'} size={20} color={'#8D889D'}></Icon>
-            )}
-          </TouchableOpacity>
-        </View>
+          {saved ? (
+            <Icon name={'bookmark'} size={20} color={'#8D889D'}></Icon>
+          ) : (
+            <Icon name={'bookmark-o'} size={20} color={'#8D889D'}></Icon>
+          )}
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   )
 }
 

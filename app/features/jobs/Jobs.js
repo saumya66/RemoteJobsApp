@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  TouchableOpacity,
   View,
   Text,
   FlatList,
   TextInput,
   StyleSheet,
-  Image,
   Keyboard,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
@@ -43,6 +41,7 @@ const Jobs = ({ navigation }) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingHorizontal: 10,
+          paddingTop: 8,
           width: '100%',
           alignItems: 'center',
         }}
@@ -51,8 +50,9 @@ const Jobs = ({ navigation }) => {
           style={{
             width: searchActive ? '85%' : '96%',
             flexDirection: 'row',
-            borderWidth: 0.5,
-            borderColor: '#8D889D',
+            borderWidth: 1,
+            borderColor: 'black',
+            // backgroundColor: 'grey',
             alignItems: 'center',
             paddingHorizontal: 8,
 
@@ -62,7 +62,12 @@ const Jobs = ({ navigation }) => {
         >
           <Icon name="briefcase-search" size={30} color="#8D889D" />
           <TextInput
-            style={{ marginLeft: 8 }}
+            style={{
+              marginLeft: 8,
+              width: '90%',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
             value={searchQuery}
             onChangeText={(text) => setSearchQuery(text)}
             onFocus={() => setSearchActive(true)}
@@ -71,10 +76,11 @@ const Jobs = ({ navigation }) => {
         </View>
         {searchActive && (
           <Text
-            style={{}}
-            onPress={() => {
+            // style={{}}
+            onPress={(e) => {
+              setSearchActive(false)
+              setSearchQuery('')
               Keyboard.dismiss()
-              setSearchActive(false)('')
             }}
           >
             Cancel
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
-    // height: '100%',
+    width: '100%',
     position: 'relative',
   },
   logoCont: {},

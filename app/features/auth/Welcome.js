@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Image,
@@ -12,11 +12,12 @@ import { auth, db } from '../../firebase'
 import * as GoogleAuthentication from 'expo-google-app-auth'
 import { ANDROID_STANDALONE_CLIENT_ID } from '@env'
 const Welcome = ({ navigation }) => {
+  const [userr, setUserr] = useState()
   console.log(ANDROID_STANDALONE_CLIENT_ID)
   const signInWithGoogle = () =>
     GoogleAuthentication.logInAsync({
-      androidClientId: ANDROID_STANDALONE_CLIENT_ID,
-      //   androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
+      //   androidClientId: ANDROID_STANDALONE_CLIENT_ID,
+      androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
       scopes: ['profile', 'email'],
     })
       .then((logInResult) => {
@@ -26,6 +27,7 @@ const Welcome = ({ navigation }) => {
             idToken,
             accessToken
           )
+          setUserr(credential)
           console.log('success')
           return firebase.auth().signInWithCredential(credential)
         }
@@ -51,19 +53,24 @@ const Welcome = ({ navigation }) => {
           justifyContent: 'flex-end',
         }}
       >
-        <Image
-          source={require('../../../assets/illustration1.png')}
-          style={{
-            width: '90%',
-            height: '90%',
-            right: 12,
-          }}
-        />
+        {userr ? (
+          <Text style={{ color: 'white' }}>{userr}</Text>
+        ) : (
+          <Image
+            source={require('../../../assets/illustration1.png')}
+            style={{
+              width: '90%',
+              height: '90%',
+              right: 12,
+            }}
+          />
+        )}
       </View>
       <View style={{ height: '45%', backgroundColor: '' }}>
         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 30 }}>
           Welcome,
         </Text>
+
         <Text
           style={{
             color: 'white',
