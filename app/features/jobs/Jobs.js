@@ -16,10 +16,18 @@ import JobCard from '../../components/JobCard'
 import _ from 'lodash'
 const Jobs = ({ navigation }) => {
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.auth)
   const jobs = useSelector((state) => state.jobs)
   const [searchActive, setSearchActive] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-
+  const [savedJobIds, setSavedJobIds] = React.useState(
+    user.userData.savedJobs.map((job) => job.item.id)
+  )
+  React.useEffect(() => {
+    console.log('hi')
+    setSavedJobIds(user.userData.savedJobs.map((job) => job.item.id))
+    console.log(savedJobIds)
+  }, [user])
   useEffect(() => {
     dispatch(fetchListings())
   }, [])
@@ -82,7 +90,11 @@ const Jobs = ({ navigation }) => {
             )
           }
           renderItem={({ item }) => (
-            <JobCard item={item} navigation={navigation} />
+            <JobCard
+              item={item}
+              navigation={navigation}
+              saved={savedJobIds.includes(item.id)}
+            />
           )}
           keyExtractor={(item) => item?.id}
         />

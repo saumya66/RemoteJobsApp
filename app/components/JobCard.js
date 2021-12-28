@@ -8,8 +8,9 @@ import { getPeriod } from '../helper'
 import { db } from '../firebase'
 import { updateUser } from '../features/auth/authSlice'
 
-const JobCard = ({ item, navigation }) => {
+const JobCard = ({ item, navigation, saved }) => {
   const user = useSelector((state) => state.auth)
+
   const saveJob = (e) => {
     // console.log(JSON.parse(user.user).uid)
     let savedJobs = user.userData.savedJobs
@@ -124,7 +125,11 @@ const JobCard = ({ item, navigation }) => {
             {getPeriod(Date.parse(item?.date))}
           </Text>
           <TouchableOpacity onPress={(e) => saveJob()}>
-            <Icon name={'bookmark-o'} size={20} color={'#8D889D'}></Icon>
+            {saved ? (
+              <Icon name={'bookmark-o'} size={20} color={'#8D889D'}></Icon>
+            ) : (
+              <Icon name={'bookmark'} size={20} color={'#8D889D'}></Icon>
+            )}
           </TouchableOpacity>
         </View>
       </View>

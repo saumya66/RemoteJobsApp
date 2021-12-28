@@ -8,8 +8,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
+import { auth, db } from '../../firebase'
+import * as GoogleAuthentication from 'expo-google-app-auth'
+import { ANDROID_STANDALONE_CLIENT_ID } from '@env'
 const Welcome = ({ navigation }) => {
+  console.log(ANDROID_STANDALONE_CLIENT_ID)
+  const signInWithGoogle = () =>
+    GoogleAuthentication.logInAsync({
+      androidClientId: ANDROID_STANDALONE_CLIENT_ID,
+      //   androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
+      scopes: ['profile', 'email'],
+    })
+      .then((logInResult) => {
+        if (logInResult.type === 'success') {
+          const { idToken, accessToken } = logInResult
+          const credential = firebase.auth.GoogleAuthProvider.credential(
+            idToken,
+            accessToken
+          )
+          console.log('success')
+          return firebase.auth().signInWithCredential(credential)
+        }
+        return Promise.reject()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   return (
     <View
       style={{
@@ -64,6 +88,7 @@ const Welcome = ({ navigation }) => {
         </Text>
 
         <Pressable
+          onPress={signInWithGoogle}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? 'rgba(255,255,255, 0.8)' : 'white',

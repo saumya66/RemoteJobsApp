@@ -39,18 +39,6 @@ const App = () => {
           ) : user.status === 'loggedIn' ? (
             <>
               <Tabs />
-              {/* <Stack.Navigator>
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="Jobs"
-                component={Jobs}
-              />
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="Home"
-                component={Home}
-              />
-            </Stack.Navigator> */}
             </>
           ) : (
             <Stack.Navigator>
@@ -97,8 +85,5 @@ export default function AppWrapper() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'red',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
 })
