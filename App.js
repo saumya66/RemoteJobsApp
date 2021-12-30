@@ -14,6 +14,7 @@ import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import Welcome from './app/features/auth/Welcome'
 import Signup from './app/features/auth/Signup'
+import JobDetails from './app/features/jobs/jobdetails/JobDetails'
 
 const Stack = createNativeStackNavigator()
 const fetchFonts = () => {
@@ -37,9 +38,22 @@ const App = () => {
               />
             </Stack.Navigator>
           ) : user.status === 'loggedIn' ? (
-            <>
-              <Tabs />
-            </>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="TabStack"
+                component={Tabs}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="JobDetails"
+                component={JobDetails}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack.Navigator>
           ) : (
             <Stack.Navigator>
               <Stack.Screen

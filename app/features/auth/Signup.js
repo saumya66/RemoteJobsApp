@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   Image,
+  ActivityIndicator,
   StyleSheet,
   Pressable,
   Text,
@@ -18,6 +19,7 @@ const Signup = ({ navigation }) => {
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
 
   const persistUserData = (user) => {
     return new Promise(function (resolve, reject) {
@@ -27,34 +29,41 @@ const Signup = ({ navigation }) => {
     })
   }
   const handleSignUp = async () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user
-        db.collection('users').doc(user.uid).set({
-          email: user.email,
-          name: name,
-          savedJobs: [],
-        })
-        persistUserData(user)
-          .then((user) =>
-            dispatch(
-              updateUser({
-                user: user,
-                userData: {
-                  email: user.email,
-                  name: name,
-                  savedJobs: [],
-                },
-                status: 'loggedIn',
-              })
+    if (name && email && password) {
+      setLoading(true)
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user
+          db.collection('users').doc(user.uid).set({
+            email: user.email,
+            name: name,
+            savedJobs: [],
+          })
+          persistUserData(user)
+            .then((user) =>
+              dispatch(
+                updateUser({
+                  user: user,
+                  userData: {
+                    email: user.email,
+                    name: name,
+                    savedJobs: [],
+                  },
+                  status: 'loggedIn',
+                })
+              )
             )
-          )
-          .catch((error) => alert(error))
-      })
-      .catch((err) => {
-        alert(err.message)
-      })
+            .catch((error) => alert(error))
+        })
+        .catch((err) => {
+          alert(err.message)
+        })
+        .finally(() => setLoading(false))
+    } else {
+      setLoading(false)
+      alert('Name, Email or Password Empty.')
+    }
   }
 
   return (
@@ -122,10 +131,13 @@ const Signup = ({ navigation }) => {
             styles.button2,
           ]}
         >
-          {/* style={styles.button2}> */}
-          <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white' }}>
-            Sign Up
-          </Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="white" />
+          ) : (
+            <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white' }}>
+              Sign Up
+            </Text>
+          )}
         </Pressable>
         <View
           style={{

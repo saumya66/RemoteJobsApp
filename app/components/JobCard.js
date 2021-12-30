@@ -12,7 +12,6 @@ const JobCard = ({ item, navigation, saved }) => {
   const user = useSelector((state) => state.auth)
   const dispatch = useDispatch()
   const saveJob = (e) => {
-    // console.log(JSON.parse(user.user).uid)
     let savedJobs = user.userData.savedJobs
     let newSavedJobs = [...savedJobs, item]
     db.collection('users')
@@ -26,7 +25,6 @@ const JobCard = ({ item, navigation, saved }) => {
             status: 'loggedIn',
           })
         )
-        console.log('Dispatched')
       })
       .catch((err) => console.log(err))
   }
@@ -93,7 +91,6 @@ const JobCard = ({ item, navigation, saved }) => {
           style={{
             // ...styles.jobInfo,
             width: '70%',
-            // backgroundColor: 'grey',
             paddingTop: 8,
             paddingHorizontal: 8,
             paddingBottom: 8,

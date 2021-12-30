@@ -1,29 +1,29 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, Text } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchListings } from './jobsSlice'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import JobCard from '../../components/JobCard'
 import _ from 'lodash'
 const Jobs = ({ navigation }) => {
   const dispatch = useDispatch()
   const savedJobs = useSelector((state) => state.auth.userData.savedJobs)
 
-  useEffect(() => {
-    dispatch(fetchListings())
-  }, [])
-
   return (
     <View style={styles.jobsCont}>
-      <View style={styles.listCont}>
-        <FlatList
-          data={savedJobs}
-          renderItem={({ item }) => (
-            <JobCard item={item} navigation={navigation} saved={true} />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+      {!savedJobs.length ? (
+        <Text style={{ marginTop: 60, color: '#8D889D', textAlign: 'center' }}>
+          Go save some awesome opportunities!
+        </Text>
+      ) : (
+        <View style={styles.listCont}>
+          <FlatList
+            data={savedJobs}
+            renderItem={({ item }) => (
+              <JobCard item={item} navigation={navigation} saved={true} />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      )}
     </View>
   )
 }

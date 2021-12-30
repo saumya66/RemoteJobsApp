@@ -61,17 +61,7 @@ const Tabs = () => {
           // tabBarBadge: 3, //Shows notifications
         }}
       />
-      <Tab.Screen
-        name="JobDetails"
-        component={JobDetails}
-        options={{
-          headerShown: false,
-          tabBarLabel: 'JobDetails',
 
-          tabBarButton: () => null, //New approach just adding this and the below prop hides the tab but let's you navigate to it
-          tabBarVisible: false,
-        }}
-      />
       <Tab.Screen
         name="Saves"
         component={SavedJobs}
@@ -80,7 +70,6 @@ const Tabs = () => {
           tabBarLabel: 'SavedJobs',
 
           tabBarButton: () => null, //New approach just adding this and the below prop hides the tab but let's you navigate to it
-          tabBarVisible: false,
         }}
       />
     </Tab.Navigator>

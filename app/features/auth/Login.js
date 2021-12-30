@@ -127,7 +127,6 @@ const Login = ({ navigation }) => {
             styles.button2,
           ]}
         >
-          {/* style={styles.button2}> */}
           {loading ? (
             <ActivityIndicator size="large" color="white" />
           ) : (

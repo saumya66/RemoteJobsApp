@@ -48,7 +48,6 @@ const Welcome = ({ navigation }) => {
         backgroundColor: '#0164FC',
       }}
     >
-      {/* <Text>Welcome</Text> */}
       <View
         style={{
           height: '55%',
