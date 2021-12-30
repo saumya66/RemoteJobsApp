@@ -10,20 +10,23 @@ import { updateUser } from '../features/auth/authSlice'
 
 const JobCard = ({ item, navigation, saved }) => {
   const user = useSelector((state) => state.auth)
-
+  const dispatch = useDispatch()
   const saveJob = (e) => {
     // console.log(JSON.parse(user.user).uid)
     let savedJobs = user.userData.savedJobs
-    let newSavedJobs = [...savedJobs, { item }]
+    let newSavedJobs = [...savedJobs, item]
     db.collection('users')
       .doc(JSON.parse(user.user).uid)
       .update({ savedJobs: newSavedJobs })
       .then(() => {
-        updateUser({
-          user: user.user,
-          userData: { ...user.userData, savedJobs: newSavedJobs },
-          status: 'loggedIn',
-        })
+        dispatch(
+          updateUser({
+            user: user.user,
+            userData: { ...user.userData, savedJobs: newSavedJobs },
+            status: 'loggedIn',
+          })
+        )
+        console.log('Dispatched')
       })
       .catch((err) => console.log(err))
   }

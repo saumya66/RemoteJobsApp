@@ -11,10 +11,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     updateUser(state, action) {
+      console.log('hit')
       state.user = action.payload.user
       state.userData = action.payload.userData
       state.status = action.payload.status
-      // console.log(current(state))
+      console.log(current(state))
     },
   },
 })

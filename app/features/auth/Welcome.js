@@ -13,11 +13,13 @@ import * as GoogleAuthentication from 'expo-google-app-auth'
 import { ANDROID_STANDALONE_CLIENT_ID } from '@env'
 const Welcome = ({ navigation }) => {
   const [userr, setUserr] = useState()
-  console.log(ANDROID_STANDALONE_CLIENT_ID)
-  const signInWithGoogle = () =>
+
+  const signInWithGoogle = (e) => {
+    // console.log('success')
     GoogleAuthentication.logInAsync({
-      //   androidClientId: ANDROID_STANDALONE_CLIENT_ID,
-      androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
+      androidClientId:
+        '984400496819-ol5da53afic6kus0qqfta7ufa0h8s5l2.apps.googleusercontent.com',
+      // androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
       scopes: ['profile', 'email'],
     })
       .then((logInResult) => {
@@ -36,6 +38,7 @@ const Welcome = ({ navigation }) => {
       .catch((error) => {
         console.log(error)
       })
+  }
   return (
     <View
       style={{

@@ -1,14 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  FlatList,
-  TextInput,
-  StyleSheet,
-  Image,
-  Keyboard,
-} from 'react-native'
+import { View, FlatList, StyleSheet } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -16,14 +7,8 @@ import JobCard from '../../components/JobCard'
 import _ from 'lodash'
 const Jobs = ({ navigation }) => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.auth)
-  const jobs = useSelector((state) => state.jobs)
-  const [savedJobs, setSavedJobs] = React.useState(user.userData.savedJobs)
-  React.useEffect(() => {
-    console.log('hi')
-    setSavedJobs(user.userData.savedJobs)
-    console.log(savedJobs)
-  }, [user])
+  const savedJobs = useSelector((state) => state.auth.userData.savedJobs)
+
   useEffect(() => {
     dispatch(fetchListings())
   }, [])
@@ -34,9 +19,9 @@ const Jobs = ({ navigation }) => {
         <FlatList
           data={savedJobs}
           renderItem={({ item }) => (
-            <JobCard item={item.item} navigation={navigation} saved={true} />
+            <JobCard item={item} navigation={navigation} saved={true} />
           )}
-          keyExtractor={(item) => item.item.id}
+          keyExtractor={(item) => item.id}
         />
       </View>
     </View>

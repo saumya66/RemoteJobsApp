@@ -77,7 +77,7 @@ const Profile = ({ navigation }) => {
             // backgroundColor: 'black',
           }}
         >
-          {console.log(user.userData)}
+          {/* {console.log(user.userData)} */}
           <View
             style={{
               width: '80%',

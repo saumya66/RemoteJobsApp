@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
+  ActivityIndicator,
   Image,
   Pressable,
   StyleSheet,
@@ -17,7 +18,7 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
-
+  const [loading, setLoading] = useState(false)
   const persistUserData = (user) => {
     return new Promise(function (resolve, reject) {
       AsyncStorage.setItem('userData', JSON.stringify(user))
@@ -27,34 +28,45 @@ const Login = ({ navigation }) => {
   }
 
   const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then(async (userCredentials) => {
-        const user = userCredentials.user
-        // console.log('userrr :', user)
-        const userData = await db
-          .collection('users')
-          .doc(user.uid)
-          .get()
-          .then((docSnapshot) => {
-            if (docSnapshot.exists) {
-              return docSnapshot.data()
-            } else console.log('Nope')
-          })
-        //Saving user data in storage
-        persistUserData(user)
-          .then((user) => {
-            // console.log('Saved User : ', user)
-            //Updating Redux State
-            dispatch(
-              updateUser({ user: user, userData: userData, status: 'loggedIn' })
-            )
-          })
-          .catch((error) => alert("Couldn't save user data : ", error))
-      })
-      .catch((err) => {
-        alert('Could not Sign In.. : ', err.message)
-      })
+    if (email && password) {
+      setLoading(true)
+
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then(async (userCredentials) => {
+          const user = userCredentials.user
+          // console.log('userrr :', user)
+          const userData = await db
+            .collection('users')
+            .doc(user.uid)
+            .get()
+            .then((docSnapshot) => {
+              if (docSnapshot.exists) {
+                return docSnapshot.data()
+              } else console.log('Nope')
+            })
+          //Saving user data in storage
+          persistUserData(user)
+            .then((user) => {
+              // console.log('Saved User : ', user)
+              //Updating Redux State
+              dispatch(
+                updateUser({
+                  user: user,
+                  userData: userData,
+                  status: 'loggedIn',
+                })
+              )
+            })
+            .catch((error) => alert("Couldn't save user data : ", error))
+        })
+        .catch((err) => {
+          alert('Could not Sign In.. : ', err.message)
+        })
+        .finally(() => setLoading(false))
+    } else {
+      alert('Email or Password is empty.')
+    }
   }
   return (
     <KeyboardAvoidingView
@@ -116,9 +128,13 @@ const Login = ({ navigation }) => {
           ]}
         >
           {/* style={styles.button2}> */}
-          <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white' }}>
-            Login
-          </Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="white" />
+          ) : (
+            <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'white' }}>
+              Login
+            </Text>
+          )}
         </Pressable>
         <View
           style={{

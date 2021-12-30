@@ -19,12 +19,14 @@ const Jobs = ({ navigation }) => {
   const [searchActive, setSearchActive] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [savedJobIds, setSavedJobIds] = React.useState(
-    user.userData.savedJobs.map((job) => job.item.id)
+    user.userData.savedJobs.length &&
+      user.userData.savedJobs.map((job) => job.id)
   )
   React.useEffect(() => {
-    console.log('hi')
-    setSavedJobIds(user.userData.savedJobs.map((job) => job.item.id))
-    console.log(savedJobIds)
+    setSavedJobIds(
+      user.userData.savedJobs.length &&
+        user.userData.savedJobs?.map((job) => job.id)
+    )
   }, [user])
   useEffect(() => {
     dispatch(fetchListings())
@@ -99,7 +101,7 @@ const Jobs = ({ navigation }) => {
             <JobCard
               item={item}
               navigation={navigation}
-              saved={savedJobIds.includes(item.id)}
+              saved={savedJobIds?.length && savedJobIds.includes(item.id)}
             />
           )}
           keyExtractor={(item) => item?.id}
