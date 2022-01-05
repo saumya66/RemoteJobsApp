@@ -49,6 +49,7 @@ const Signup = ({ navigation }) => {
                     email: user.email,
                     name: name,
                     savedJobs: [],
+                    photoUrl: '',
                   },
                   status: 'loggedIn',
                 })

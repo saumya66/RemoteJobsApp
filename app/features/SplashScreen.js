@@ -19,7 +19,7 @@ const SplashScreen = () => {
         } else {
           const userData = await db
             .collection('users')
-            .doc(JSON.parse(user).uid)
+            .doc(JSON.parse(user)?.uid || JSON.parse(user)?.id)
             .get()
             .then((docSnapshot) => {
               if (docSnapshot.exists) {

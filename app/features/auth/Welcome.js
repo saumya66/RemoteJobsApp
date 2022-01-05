@@ -8,35 +8,68 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { auth, db } from '../../firebase'
+import { updateUser } from './authSlice'
+
 import * as GoogleAuthentication from 'expo-google-app-auth'
 import { ANDROID_STANDALONE_CLIENT_ID } from '@env'
-const Welcome = ({ navigation }) => {
-  const [userr, setUserr] = useState()
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { db } from '../../firebase'
+import { useDispatch } from 'react-redux'
 
-  const signInWithGoogle = (e) => {
-    // console.log('success')
+const Welcome = ({ navigation }) => {
+  const dispatch = useDispatch()
+  const persistUserData = (user) => {
+    return new Promise(function (resolve, reject) {
+      AsyncStorage.setItem('userData', JSON.stringify(user))
+        .then(() => {
+          console.log(JSON.stringify(user))
+          resolve(JSON.stringify(user))
+        })
+        .catch((err) => {
+          console.log('nosave', err)
+          reject('Logged in User data not persisted : ', err)
+        })
+    })
+  }
+  const signInWithGoogle = async (e) => {
     GoogleAuthentication.logInAsync({
       androidClientId:
-        '984400496819-ol5da53afic6kus0qqfta7ufa0h8s5l2.apps.googleusercontent.com',
+        '984400496819-jclkpa9jkrs88eajes82ohinum0kf2fj.apps.googleusercontent.com',
       // androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
       scopes: ['profile', 'email'],
     })
       .then((logInResult) => {
         if (logInResult.type === 'success') {
-          const { idToken, accessToken } = logInResult
-          const credential = firebase.auth.GoogleAuthProvider.credential(
-            idToken,
-            accessToken
-          )
-          setUserr(credential)
-          console.log('success')
-          return firebase.auth().signInWithCredential(credential)
+          const user = logInResult.user
+          db.collection('users').doc(user.id).set({
+            email: user.email,
+            name: user.name,
+            savedJobs: [],
+            photoUrl: user.photoUrl,
+          })
+          persistUserData(user)
+            .then((userData) => {
+              console.log(userData)
+              dispatch(
+                updateUser({
+                  user: userData,
+                  userData: {
+                    email: user.email,
+                    name: user.name,
+                    savedJobs: [],
+                    photoUrl: user.photoUrl,
+                  },
+                  status: 'loggedIn',
+                })
+              )
+            })
+            .catch((err) => alert("Couldn't save user data : ", err))
+        } else {
+          alert('Google Sign-In failed : ', error)
         }
-        return Promise.reject()
       })
       .catch((error) => {
-        console.log(error)
+        alert('Google Sign-In failed : ', error)
       })
   }
   return (
@@ -55,18 +88,14 @@ const Welcome = ({ navigation }) => {
           justifyContent: 'flex-end',
         }}
       >
-        {userr ? (
-          <Text style={{ color: 'white' }}>{userr}</Text>
-        ) : (
-          <Image
-            source={require('../../../assets/illustration1.png')}
-            style={{
-              width: '90%',
-              height: '90%',
-              right: 12,
-            }}
-          />
-        )}
+        <Image
+          source={require('../../../assets/illustration1.png')}
+          style={{
+            width: '90%',
+            height: '90%',
+            right: 12,
+          }}
+        />
       </View>
       <View style={{ height: '45%', backgroundColor: '' }}>
         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 30 }}>
