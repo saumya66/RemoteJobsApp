@@ -38,13 +38,14 @@ const JobDetails = (props) => {
         flex: 1,
         height: '100%',
         width: '100%',
+        alignItems: 'center',
         backgroundColor: '#FAFAFC',
         padding: 20,
       }}
     >
       <View
         style={{
-          height: '35%',
+          height: '30%',
           //   backgroundColor: 'grey',
           alignItems: 'center',
           marginBottom: 15,
@@ -53,8 +54,8 @@ const JobDetails = (props) => {
         {job?.company_logo ? (
           <Image
             style={{
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
               borderRadius: 10,
               resizeMode: 'contain',
               marginBottom: 20,
@@ -94,11 +95,13 @@ const JobDetails = (props) => {
       <View
         style={{
           width: '100%',
-          padding: 20,
+          paddingHorizontal: 15,
+          paddingTop: 15,
+          paddingBottom: 5,
           alignItems: 'center',
           backgroundColor: 'white',
           borderRadius: 15,
-          height: '65%',
+          height: '60%',
         }}
       >
         <ScrollView>
@@ -108,20 +111,23 @@ const JobDetails = (props) => {
             <Markdown>{job.description}</Markdown>
           )}
         </ScrollView>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed
-                ? 'rgba(1, 100, 252, 0.9)'
-                : 'rgba(1, 100, 252, 1)',
-            },
-            styles.button1,
-          ]}
-          onPress={handleOpenLink}
-        >
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>{'Apply'}</Text>
-        </Pressable>
+        <View style={{ postition: 'absolute', bottom: 0, left: 0 }}>
+          <Text style={{ color: '#8D889D' }}>job from remoteok.com</Text>
+        </View>
       </View>
+      <Pressable
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed
+              ? 'rgba(1, 100, 252, 0.9)'
+              : 'rgba(1, 100, 252, 1)',
+          },
+          styles.button1,
+        ]}
+        onPress={handleOpenLink}
+      >
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>{'Apply'}</Text>
+      </Pressable>
     </View>
   )
 }
@@ -136,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     bottom: 10,
     position: 'absolute',
-    width: '110%',
+    width: '100%',
     height: 50,
   },
 })

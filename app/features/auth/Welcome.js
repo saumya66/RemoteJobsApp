@@ -33,8 +33,8 @@ const Welcome = ({ navigation }) => {
   const signInWithGoogle = async (e) => {
     setSpinner(true)
     GoogleAuthentication.logInAsync({
-      androidClientId: ANDROID_EXPO_CLIENT_ID,
-      // androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
+      // androidClientId: ANDROID_EXPO_CLIENT_ID, //to be used when developing on expo
+      androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID, //to be used for standalone app or the apk
       scopes: ['profile', 'email'],
     })
       .then((logInResult) => {

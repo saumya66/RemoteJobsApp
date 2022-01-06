@@ -90,7 +90,6 @@ const Jobs = ({ navigation }) => {
           </Text>
         )}
       </View>
-      {/* {console.log(savedJobIds.includes('107971'))} */}
       <View style={styles.listCont}>
         {jobs.loading ? (
           <ActivityIndicator size="large" color="#0164FC" />
