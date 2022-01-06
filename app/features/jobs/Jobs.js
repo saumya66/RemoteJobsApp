@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchListings } from './jobsSlice'
@@ -89,23 +90,28 @@ const Jobs = ({ navigation }) => {
           </Text>
         )}
       </View>
+      {/* {console.log(savedJobIds.includes('107971'))} */}
       <View style={styles.listCont}>
-        <FlatList
-          data={
-            !jobs.loading &&
-            jobs?.jobs.filter((job) =>
-              job.position.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-          }
-          renderItem={({ item }) => (
-            <JobCard
-              item={item}
-              navigation={navigation}
-              saved={savedJobIds?.length && savedJobIds.includes(item.id)}
-            />
-          )}
-          keyExtractor={(item) => item?.id}
-        />
+        {jobs.loading ? (
+          <ActivityIndicator size="large" color="#0164FC" />
+        ) : (
+          <FlatList
+            data={
+              !jobs.loading &&
+              jobs?.jobs.filter((job) =>
+                job.position.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+            }
+            renderItem={({ item }) => (
+              <JobCard
+                item={item}
+                navigation={navigation}
+                saved={savedJobIds?.length && savedJobIds.includes(item.id)}
+              />
+            )}
+            keyExtractor={(item) => item?.id}
+          />
+        )}
       </View>
     </View>
   )
@@ -147,6 +153,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     width: '100%',
     position: 'relative',
+    justifyContent: 'center',
   },
   logoCont: {},
 })

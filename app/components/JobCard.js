@@ -1,6 +1,12 @@
 import * as React from 'react'
-
-import { TouchableOpacity, View, Text, Image } from 'react-native'
+import { useState } from 'react'
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+} from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon1 from 'react-native-vector-icons/Ionicons'
@@ -10,12 +16,14 @@ import { updateUser } from '../features/auth/authSlice'
 
 const JobCard = ({ item, navigation, saved }) => {
   const user = useSelector((state) => state.auth)
+  const [saveToggleSpinner, setSaveToggleSpinner] = useState(false)
   const dispatch = useDispatch()
   const saveJob = (e) => {
+    setSaveToggleSpinner(true)
     let savedJobs = user.userData.savedJobs
     let newSavedJobs = [...savedJobs, item]
     db.collection('users')
-      .doc(JSON.parse(user.user).uid)
+      .doc(JSON.parse(user.user).uid || JSON.parse(user.user).id)
       .update({ savedJobs: newSavedJobs })
       .then(() => {
         dispatch(
@@ -27,6 +35,30 @@ const JobCard = ({ item, navigation, saved }) => {
         )
       })
       .catch((err) => console.log(err))
+      .finally(() => setSaveToggleSpinner(false))
+  }
+  const unSaveJob = (e) => {
+    setSaveToggleSpinner(true)
+    console.log('here')
+    let savedJobs = user.userData.savedJobs
+    let newSavedJobs = savedJobs.filter((job) => job.id != item.id)
+    db.collection('users')
+      .doc(JSON.parse(user.user).uid || JSON.parse(user.user).id)
+      .update({ savedJobs: newSavedJobs })
+      .then(() => {
+        dispatch(
+          updateUser({
+            user: user.user,
+            userData: { ...user.userData, savedJobs: newSavedJobs },
+            status: 'loggedIn',
+          })
+        )
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        console.log('exitting')
+        setSaveToggleSpinner(false)
+      })
   }
 
   return (
@@ -89,7 +121,6 @@ const JobCard = ({ item, navigation, saved }) => {
         </View>
         <View
           style={{
-            // ...styles.jobInfo,
             width: '70%',
             paddingTop: 8,
             paddingHorizontal: 8,
@@ -127,10 +158,14 @@ const JobCard = ({ item, navigation, saved }) => {
           {getPeriod(Date.parse(item?.date))}
         </Text>
         <TouchableOpacity
-          disabled={saved ? true : false}
-          onPress={(e) => saveJob()}
+          // disabled={saved ? true : false}
+          onPress={(e) => {
+            saved ? unSaveJob() : saveJob()
+          }}
         >
-          {saved ? (
+          {saveToggleSpinner ? (
+            <ActivityIndicator size="small" color="#8D889D" />
+          ) : saved ? (
             <Icon name={'bookmark'} size={20} color={'#8D889D'}></Icon>
           ) : (
             <Icon name={'bookmark-o'} size={20} color={'#8D889D'}></Icon>

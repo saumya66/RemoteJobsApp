@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  ActivityIndicator,
   Button,
   Image,
   Pressable,
@@ -9,32 +10,30 @@ import {
   View,
 } from 'react-native'
 import { updateUser } from './authSlice'
-
 import * as GoogleAuthentication from 'expo-google-app-auth'
-import { ANDROID_STANDALONE_CLIENT_ID } from '@env'
+import { ANDROID_STANDALONE_CLIENT_ID, ANDROID_EXPO_CLIENT_ID } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { db } from '../../firebase'
 import { useDispatch } from 'react-redux'
 
 const Welcome = ({ navigation }) => {
   const dispatch = useDispatch()
+  const [spinner, setSpinner] = useState()
   const persistUserData = (user) => {
     return new Promise(function (resolve, reject) {
       AsyncStorage.setItem('userData', JSON.stringify(user))
         .then(() => {
-          console.log(JSON.stringify(user))
           resolve(JSON.stringify(user))
         })
         .catch((err) => {
-          console.log('nosave', err)
           reject('Logged in User data not persisted : ', err)
         })
     })
   }
   const signInWithGoogle = async (e) => {
+    setSpinner(true)
     GoogleAuthentication.logInAsync({
-      androidClientId:
-        '984400496819-jclkpa9jkrs88eajes82ohinum0kf2fj.apps.googleusercontent.com',
+      androidClientId: ANDROID_EXPO_CLIENT_ID,
       // androidStandaloneAppClientId: ANDROID_STANDALONE_CLIENT_ID,
       scopes: ['profile', 'email'],
     })
@@ -71,6 +70,7 @@ const Welcome = ({ navigation }) => {
       .catch((error) => {
         alert('Google Sign-In failed : ', error)
       })
+      .finally(() => setSpinner(false))
   }
   return (
     <View
@@ -134,9 +134,15 @@ const Welcome = ({ navigation }) => {
             styles.button1,
           ]}
         >
-          <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#0164FC' }}>
-            Sign in with Google
-          </Text>
+          {spinner ? (
+            <ActivityIndicator size="large" color="#0164FC" />
+          ) : (
+            <Text
+              style={{ fontSize: 15, fontWeight: 'bold', color: '#0164FC' }}
+            >
+              Sign in with Google
+            </Text>
+          )}
         </Pressable>
 
         <Pressable
